@@ -1,16 +1,24 @@
 import streamlit as st
-from predict import analyze_pattern
+from predict import predict_next
 
-st.title("Phân Tích Cầu Tài Xỉu")
-st.markdown("**Nhập chuỗi kết quả gần đây (T cho Tài, X cho Xỉu)**")
+st.set_page_config(page_title="Phân Tích Cầu Tài Xỉu", page_icon="🎲", layout="centered")
 
-user_input = st.text_input("Ví dụ: T,X,T,T,X")
+st.markdown(
+    """
+    <div style='text-align: center;'>
+        <h1 style='color: #ff4b4b;'>Phân Tích Cầu Tài Xỉu 🎲</h1>
+        <p style='font-size: 18px;'>Dự đoán kết quả tiếp theo dựa trên lịch sử</p>
+    </div>
+    """, unsafe_allow_html=True
+)
 
-if user_input:
-    results = [x.strip().upper() for x in user_input.split(",") if x.strip().upper() in ['T', 'X']]
-    if results:
-        pattern, prediction = analyze_pattern(results)
-        st.success(f"Phân tích: {pattern}")
-        st.info(f"Dự đoán kết quả tiếp theo: **{prediction}**")
+# Nhập kết quả gần đây
+input_text = st.text_input("Nhập chuỗi kết quả gần đây (T hoặc X, ví dụ: TXXTTX):")
+
+if st.button("Phân tích ngay"):
+    if input_text:
+        with st.spinner("Đang phân tích..."):
+            result = predict_next(input_text.strip().upper())
+            st.success(f"Dự đoán tiếp theo: **{result}**")
     else:
-        st.warning("Chuỗi nhập vào không hợp lệ. Hãy dùng T hoặc X, cách nhau bởi dấu phẩy.")
+        st.warning("Vui lòng nhập chuỗi kết quả trước khi phân tích.")

@@ -1,8 +1,8 @@
-def predict_next(sequence):
-    if not sequence or len(sequence) < 3:
-        return "Không đủ dữ liệu"
-
-    last = sequence[-1]
+def predict_next(inputs):
+    # Dummy logic, trả về 'TÀI' nếu số lần 'TÀI' nhiều hơn, ngược lại 'XỈU'
+    count_tai = inputs.count('T')
+    count_xiu = inputs.count('X')
+    return 'TÀI' if count_tai >= count_xiu else 'XỈU'
     count_T = sequence.count("T")
     count_X = sequence.count("X")
 

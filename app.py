@@ -1,24 +1,16 @@
 import streamlit as st
-from predict import predict_next
+from predict_next_tai_xiu import predict_next
 
-st.set_page_config(page_title="Phân Tích Cầu Tài Xỉu", page_icon="🎲", layout="centered")
+st.set_page_config(page_title="Dự đoán Tài Xỉu", page_icon="🎲")
 
-st.markdown(
-    """
-    <div style='text-align: center;'>
-        <h1 style='color: #ff4b4b;'>Phân Tích Cầu Tài Xỉu 🎲</h1>
-        <p style='font-size: 18px;'>Dự đoán kết quả tiếp theo dựa trên lịch sử</p>
-    </div>
-    """, unsafe_allow_html=True
-)
+st.title("Dự đoán kết quả Tài Xỉu")
 
-# Nhập kết quả gần đây
-input_text = st.text_input("Nhập chuỗi kết quả gần đây (T hoặc X, ví dụ: TXXTTX):")
+# Nhập chuỗi kết quả gần đây
+results_input = st.text_input("Nhập chuỗi kết quả (T cho Tài, X cho Xỉu, viết liền không dấu cách):", "")
 
-if st.button("Phân tích ngay"):
-    if input_text:
-        with st.spinner("Đang phân tích..."):
-            result = predict_next(input_text.strip().upper())
-            st.success(f"Dự đoán tiếp theo: **{result}**")
+if st.button("Dự đoán"):
+    if all(char in "TXtx" for char in results_input) and len(results_input) > 0:
+        prediction = predict_next(results_input.upper())
+        st.success(f"Kết quả dự đoán tiếp theo: **{prediction}**")
     else:
-        st.warning("Vui lòng nhập chuỗi kết quả trước khi phân tích.")
+        st.error("Vui lòng chỉ nhập các ký tự T hoặc X.")

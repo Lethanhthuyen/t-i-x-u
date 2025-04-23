@@ -1,16 +1,26 @@
 import streamlit as st
-from predict_next_tai_xiu import predict_next
+from predict_next_tai_xiu import predict_next, thong_ke_chuoi_cau
 
-st.set_page_config(page_title="Dự đoán Tài Xỉu", page_icon="🎲")
+st.set_page_config(page_title="Phân tích cầu Tài Xỉu", layout="centered")
 
-st.title("Dự đoán kết quả Tài Xỉu")
+st.title("Dự đoán & Thống kê cầu Tài Xỉu")
+st.write("Nhập kết quả gần đây (T = Tài, X = Xỉu), phân cách bằng dấu phẩy.")
 
-# Nhập chuỗi kết quả gần đây
-results_input = st.text_input("Nhập chuỗi kết quả (T cho Tài, X cho Xỉu, viết liền không dấu cách):", "")
+user_input = st.text_input("Nhập chuỗi kết quả:", "T,X,T,X,X,T,T,T,X")
 
-if st.button("Dự đoán"):
-    if all(char in "TXtx" for char in results_input) and len(results_input) > 0:
-        prediction = predict_next(results_input.upper())
-        st.success(f"Kết quả dự đoán tiếp theo: **{prediction}**")
+if st.button("Phân tích"):
+    inputs = [i.strip().upper() for i in user_input.split(",") if i.strip().upper() in ["T", "X"]]
+
+    if not inputs:
+        st.warning("Vui lòng nhập đúng định dạng chuỗi gồm T và X.")
     else:
-        st.error("Vui lòng chỉ nhập các ký tự T hoặc X.")
+        # Dự đoán kết quả tiếp theo
+        du_doan = predict_next(inputs)
+        st.subheader(f"**Dự đoán kết quả tiếp theo:** {du_doan}")
+
+        # Thống kê chuỗi
+        thong_ke = thong_ke_chuoi_cau(inputs)
+        st.subheader("**Thống kê chuỗi Tài/Xỉu liên tiếp:**")
+        for kq, sl in thong_ke:
+            loai = "TÀI" if kq == "T" else "XỈU"
+            st.write(f"{loai} liên tiếp: {sl} lần")

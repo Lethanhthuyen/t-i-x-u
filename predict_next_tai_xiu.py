@@ -1,27 +1,27 @@
-def predict_next(results):
-    """
-    Dự đoán kết quả tiếp theo dựa trên chuỗi kết quả trước đó.
-    Đây chỉ là mô phỏng đơn giản, bạn có thể nâng cấp thuật toán sau.
-
-    Args:
-        results (list of str): Danh sách kết quả trước đó. Ví dụ: ['T', 'X', 'T', 'T']
-
-    Returns:
-        str: 'T' hoặc 'X' - kết quả dự đoán tiếp theo
-    """
-    if not results:
-        return 'T'  # Mặc định nếu không có dữ liệu
-
-    # Đếm số lần xuất hiện của Tài và Xỉu
-    tai_count = results.count('T')
-    xiu_count = results.count('X')
-
-    # Dự đoán ngược lại nếu một bên xuất hiện quá nhiều (kiểu lật kèo)
-    if tai_count > xiu_count:
-        return 'X'
-    elif xiu_count > tai_count:
-        return 'T'
+def predict_next(inputs):
+    if not inputs or len(inputs) < 3:
+        return "Không đủ dữ liệu"
+    count_t = inputs.count('T')
+    count_x = inputs.count('X')
+    if count_t > count_x:
+        return 'XỈU'
+    elif count_x > count_t:
+        return 'TÀI'
     else:
-        # Nếu bằng nhau thì random
-        import random
-        return random.choice(['T', 'X'])
+        return 'TÀI'
+
+def thong_ke_chuoi_cau(inputs):
+    if not inputs:
+        return []
+    ket_qua = []
+    hien_tai = inputs[0]
+    dem = 1
+    for i in range(1, len(inputs)):
+        if inputs[i] == hien_tai:
+            dem += 1
+        else:
+            ket_qua.append((hien_tai, dem))
+            hien_tai = inputs[i]
+            dem = 1
+    ket_qua.append((hien_tai, dem))
+    return ket_qua
